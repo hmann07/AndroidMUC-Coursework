@@ -4,3 +4,6 @@ android:
   components:
     - tools
     - android-25
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
