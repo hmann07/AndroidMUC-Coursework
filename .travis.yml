@@ -1,4 +1,5 @@
 language: android
 android:
   components:
+    - buld-tools-25.0.2
     - android-19
