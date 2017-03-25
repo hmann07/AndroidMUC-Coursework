@@ -4,4 +4,4 @@ android:
   components:
     - tools
     - buld-tools-25.0.2
-    - android-19
+    - android-25
