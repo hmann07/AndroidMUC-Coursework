@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
           // Get reference to the map fragement
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
-        updateMap();
+        updateMap(-34.0, 151.0);
 
 
     }
@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
                 dbref = mDatabase.getReference("" + System.currentTimeMillis() + "");
                 dbref.setValue(mLocation.getCurrentLocation());
+
+                // and now update the map
+
+                updateMap(iaLocation.getLatitude(), iaLocation.getLongitude());
 
             }
 
@@ -123,13 +127,14 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void updateMap(){
+    public void updateMap(final Double lat, final Double lng){
         // get the map inside the fragement.
         mMap.getMapAsync(new OnMapReadyCallback() {
+
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 GoogleMap m = googleMap;
-                LatLng sydney = new LatLng(-34, 151);
+                LatLng sydney = new LatLng(lat, lng);
                 m.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
                 m.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             }
@@ -137,3 +142,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+
+
