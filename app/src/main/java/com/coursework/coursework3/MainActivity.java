@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public final int CODE_PERMISSIONS = 1;
     public final String TAG = "IALOCATION";
     public TextView mTextView;
-    private MyLocation mLocation;
+    private Location mLocation;
     private SupportMapFragment mMap;
 
     public IALocationManager mLocationManager;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(IALocation iaLocation) {
 
-                mLocation = new MyLocation(iaLocation.getLatitude(), iaLocation.getLongitude());
+                mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude());
 
                 Log.d(TAG, "latitude " + iaLocation.getLatitude());
                 Log.d(TAG, "latitude " + iaLocation.getLongitude());
@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
                 dbref.setValue("" + i);
                 mTextView.setText("" + i);
                 Log.d("statchange", "" + i);
+                Location t = new Location(51.494939,-0.086105);
+                Location f = new Location(51.494785,-0.086250);
+                mTextView.setText("" + f.getDistance(t));
             }
         };
 
