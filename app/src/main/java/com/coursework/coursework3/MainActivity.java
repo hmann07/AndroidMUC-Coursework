@@ -8,6 +8,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +26,8 @@ import com.indooratlas.android.sdk.IALocationListener;
 import com.indooratlas.android.sdk.IALocationManager;
 import com.indooratlas.android.sdk.IALocationRequest;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +45,18 @@ public class MainActivity extends AppCompatActivity {
 
     public FirebaseDatabase mDatabase;
     public DatabaseReference dbref;
+
+    // List of points of interest.
+    private Location[] mPOI = {
+            new Location(51.522026, -0.130534, "Computer Thing",R.drawable.comp),
+            new Location(51.522076, -0.130564, "Window", R.drawable.window),
+            new Location(51.522100, -0.130464, "Entrance to room", R.drawable.door)
+    };
+
+    // list for keeping record of what is currently neary user location
+    private ArrayList mNearby =  new ArrayList<String>();;
+    // adapter to use to show use the nearby points of interest.
+    private POIAdapter adapter;
 
 
     @Override
@@ -61,14 +77,22 @@ public class MainActivity extends AppCompatActivity {
 
         // First create a location manager.
         mLocationManager = IALocationManager.create(this);
+
+        // Set up reference to Firebase.
         mDatabase = FirebaseDatabase.getInstance();
 
           // Get reference to the map fragement
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
+        // Focus map on some predefined location.
         updateMap(-34.0, 151.0);
 
+        // Information for adaptors and lists from: https://developer.android.com/guide/topics/ui/declaring-layout.html#AdapterViews
+        // http://stackoverflow.com/questions/4540754/dynamically-add-elements-to-a-listview-android
 
+        adapter = new POIAdapter(this, mNearby);
+        ListView t = (ListView) findViewById(R.id.poi_list);
+        t.setAdapter(adapter);
     }
 
     @Override
@@ -85,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(IALocation iaLocation) {
 
-                mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude());
+                mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude(), "Your Location", R.mipmap.ic_launcher);
 
                 Log.d(TAG, "latitude " + iaLocation.getLatitude());
                 Log.d(TAG, "latitude " + iaLocation.getLongitude());
@@ -99,6 +123,19 @@ public class MainActivity extends AppCompatActivity {
 
                 updateMap(iaLocation.getLatitude(), iaLocation.getLongitude());
 
+                // Check if there's anything intersting nearby..
+                mNearby.clear();
+
+                for (Location l: mPOI
+                     ) {
+
+                    if (l.getDistance(mLocation) < 3){
+                        // its point of interest
+                        mNearby.add(l);
+                    }
+                }
+
+                // update InfoFragment with locations nearby
             }
 
             @Override
@@ -107,9 +144,14 @@ public class MainActivity extends AppCompatActivity {
                 dbref.setValue("" + i);
                 mTextView.setText("" + i);
                 Log.d("statchange", "" + i);
-                Location t = new Location(51.494939,-0.086105);
-                Location f = new Location(51.494785,-0.086250);
-                mTextView.setText("" + f.getDistance(t));
+                //Location t = new Location(51.494939,-0.086105, "some where");
+                //Location f = new Location(51.494785,-0.086250, "somewhere else");
+                //mTextView.setText("" + f.getDistance(t));
+                for (Location l : mPOI
+                     ) {
+                    adapter.add(l);
+                }
+
             }
         };
 

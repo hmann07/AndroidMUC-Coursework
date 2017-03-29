@@ -3,11 +3,20 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="com.coursework.coursework3.IndoorLocationFragment">
-
-        <TextView
-        android:id="@+id/location_output"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/location_output"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hello_blank_fragment"/>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/poi_list">
+                </ListView>
+        </LinearLayout>
 
 </FrameLayout>

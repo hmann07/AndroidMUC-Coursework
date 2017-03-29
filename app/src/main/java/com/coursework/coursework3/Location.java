@@ -11,11 +11,23 @@ import java.util.Map;
 public class Location {
 
     private Map<String,Double> mCurrentLocation;
+    private String mDescription;
+    private int mImageResourceId;
 
-    public Location(Double lat, Double lng){
+    public Location(Double lat, Double lng, String descr, int img){
         mCurrentLocation = new HashMap<String,Double>();
         mCurrentLocation.put("lat", lat);
         mCurrentLocation.put("lng", lng);
+        mDescription = descr;
+        mImageResourceId = img;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public int getImageResourceId() {
+        return mImageResourceId;
     }
 
     public Map<String, Double> getCurrentLocation() {
