@@ -15,3 +15,8 @@ licenses:
   - 'android-sdk-preview-license-.+'
   - 'android-sdk-license-.+'
   - 'google-gdk-license-.+'
+
+# Taken from travis website
+
+before_script:
+  - android-wait-for-emulator
