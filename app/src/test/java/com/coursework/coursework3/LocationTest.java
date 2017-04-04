@@ -13,7 +13,7 @@ public class LocationTest {
         Location t = new Location(0.0,0.0,"point 1", 1);
         Location f = new Location(0.0,0.0,"point 2", 2);
         double d = f.getDistance(t);
-        assertEquals(0.0, d, d-0.0);
+        assertEquals(2.0, d, d-0.0);
     }
 
 }
