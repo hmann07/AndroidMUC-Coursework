@@ -9,9 +9,12 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class CourseworkUnitTests {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(8, 2 + 2);
+    public void checkDistance() throws Exception {
+        Location t = new Location(0.0,0.0,"point 1", 1);
+        Location f = new Location(0.0,0.0,"point 2", 2);
+        double d = f.getDistance(t);
+        assertEquals(0.0, d);
     }
 }
