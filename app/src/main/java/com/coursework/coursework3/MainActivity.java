@@ -2,6 +2,7 @@ package com.coursework.coursework3;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -39,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private Location mLocation;
     private SupportMapFragment mMap;
 
+    // Variables for Indoor Atlas
     public IALocationManager mLocationManager;
     public IALocationListener mLocationListener;
     public IALocationRequest mLocationRequest;
 
+    // Variables for Firebase
     public FirebaseDatabase mDatabase;
     public DatabaseReference dbref;
 
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
         // Focus map on some predefined location.
-        updateMap(-34.0, 151.0);
+        //updateMap(-34.0, 151.0);
 
         // Information for adaptors and lists from: https://developer.android.com/guide/topics/ui/declaring-layout.html#AdapterViews
         // http://stackoverflow.com/questions/4540754/dynamically-add-elements-to-a-listview-android
@@ -102,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // set up the request and listener
         mLocationRequest = IALocationRequest.create();
+        // 1 second update intervals
         mLocationRequest.setFastestInterval(1000);
 
 
@@ -114,7 +119,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "latitude " + iaLocation.getLatitude());
                 Log.d(TAG, "latitude " + iaLocation.getLongitude());
 
-                // at this point we should log the local in firebase...
+                // print out locations information
+                mTextView.setText("lat: " + mLocation.getCurrentLocation().get("lat") + ", lng: " + mLocation.getCurrentLocation().get("lng") );
+
+
+                // at this point we should log the local in firebase. Use current time as key.
 
                 dbref = mDatabase.getReference("" + System.currentTimeMillis() + "");
                 dbref.setValue(mLocation.getCurrentLocation());
@@ -123,35 +132,22 @@ public class MainActivity extends AppCompatActivity {
 
                 updateMap(iaLocation.getLatitude(), iaLocation.getLongitude());
 
-                // Check if there's anything intersting nearby..
-                mNearby.clear();
+                // Check if there's anything intersting nearby. if the is, show in MapInfoFragment.
+                adapter.clear();
 
                 for (Location l: mPOI
                      ) {
 
                     if (l.getDistance(mLocation) < 3){
-                        // its point of interest
-                        mNearby.add(l);
+                        // its point of interest. This will automatically update the  MapInfoFragment.
+                        adapter.add(l);
                     }
                 }
-
-                // update InfoFragment with locations nearby
             }
 
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
-                dbref = mDatabase.getReference("" + System.currentTimeMillis() + "");
-                dbref.setValue("" + i);
-                mTextView.setText("" + i);
-                Log.d("statchange", "" + i);
-                //Location t = new Location(51.494939,-0.086105, "some where");
-                //Location f = new Location(51.494785,-0.086250, "somewhere else");
-                //mTextView.setText("" + f.getDistance(t));
-                for (Location l : mPOI
-                     ) {
-                    adapter.add(l);
-                }
-
+               Log.d("statchange", "" + i);
             }
         };
 
@@ -179,9 +175,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 GoogleMap m = googleMap;
-                LatLng sydney = new LatLng(lat, lng);
-                m.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-                m.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                LatLng pos = new LatLng(lat, lng);
+                m.clear();
+                //m.addCircle(new CircleOptions().center(pos).radius(100).fillColor(Color.BLUE));
+                m.addMarker(new MarkerOptions().position(pos).title("lat: " + lat + ", lng: " + lng));
+
+                m.moveCamera(CameraUpdateFactory.newLatLng(pos));
+
             }
         });
     }
