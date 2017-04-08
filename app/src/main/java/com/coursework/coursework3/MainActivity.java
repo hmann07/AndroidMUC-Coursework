@@ -18,8 +18,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public TextView mTextView;
     private Location mLocation;
     private SupportMapFragment mMap;
+
 
     // Variables for Indoor Atlas
     public IALocationManager mLocationManager;
@@ -173,11 +176,13 @@ public class MainActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 GoogleMap m = googleMap;
                 LatLng pos = new LatLng(lat, lng);
+
                 m.clear();
-                //m.addCircle(new CircleOptions().center(pos).radius(100).fillColor(Color.BLUE));
+
+                m.addCircle(new CircleOptions().center(pos).radius(2.2).fillColor(Color.argb(30,0,0,255)).strokeWidth(1).strokeColor(Color.GRAY));
                 m.addMarker(new MarkerOptions().position(pos).title("lat: " + lat + ", lng: " + lng));
 
-                m.moveCamera(CameraUpdateFactory.newLatLng(pos));
+                m.moveCamera(CameraUpdateFactory.newLatLngZoom(pos,20));
 
             }
         });

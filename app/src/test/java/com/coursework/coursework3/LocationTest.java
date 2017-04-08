@@ -23,9 +23,9 @@ public class LocationTest {
         Location t = new Location(51.5264420, -0.1334590, "point 1", 1);
         Location f = new Location(51.5272230, -0.1310450, "point 2", 2);
         double d = f.getDistance(t);
-        DecimalFormat df = new DecimalFormat("#.####");
+        DecimalFormat df = new DecimalFormat("#.##");
 
-        assertEquals("188.73", df.format(d));
+        assertEquals("188.23", df.format(d));
     }
 
 }
