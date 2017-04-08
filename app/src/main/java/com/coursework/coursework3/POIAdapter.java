@@ -28,19 +28,18 @@ public class POIAdapter extends ArrayAdapter<Location> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_view_item, parent, false);
         }
-        // Lookup view for data population
+        // get all the views in the layout
         TextView lat = (TextView) convertView.findViewById(R.id.lat_item);
         TextView lng = (TextView) convertView.findViewById(R.id.lng_item);
         TextView d = (TextView) convertView.findViewById(R.id.loc_descr);
         ImageView img = (ImageView) convertView.findViewById(R.id.loc_img);
-        //TextView lng = (TextView) convertView.findViewById(R.id.tvHome);
-        // Populate the data into the template view using the data object
+
+        // define content of the views
         lat.setText("" + loc.getCurrentLocation().get("lat"));
         lng.setText("" + loc.getCurrentLocation().get("lng"));
         d.setText(loc.getDescription());
         img.setImageResource(loc.getImageResourceId());
 
-        //tvHome.setText(user.hometown);
         // Return the completed view to render on screen
         return convertView;
     }

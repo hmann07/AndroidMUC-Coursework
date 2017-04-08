@@ -88,10 +88,7 @@ public class MainActivity extends AppCompatActivity {
           // Get reference to the map fragement
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
-        // Focus map on some predefined location.
-        //updateMap(-34.0, 151.0);
-
-        // Information for adaptors and lists from: https://developer.android.com/guide/topics/ui/declaring-layout.html#AdapterViews
+          // Information for adaptors and lists from: https://developer.android.com/guide/topics/ui/declaring-layout.html#AdapterViews
         // http://stackoverflow.com/questions/4540754/dynamically-add-elements-to-a-listview-android
 
         adapter = new POIAdapter(this, mNearby);
@@ -113,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mLocationListener = new IALocationListener() {
             @Override
             public void onLocationChanged(IALocation iaLocation) {
-
+                // We have a new location.
                 mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude(), "Your Location", R.mipmap.ic_launcher);
 
                 Log.d(TAG, "latitude " + iaLocation.getLatitude());

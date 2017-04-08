@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class IndoorLocationFragment extends SupportMapFragment {
 
+    // Using the SupportMapFragment this will automatically configure and add the map. Out of the box functionality is fine.
+
     private GoogleApiClient mClient;
     private GoogleMap mMap;
     private TextView mExtraText;
