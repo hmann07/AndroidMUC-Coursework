@@ -6,6 +6,8 @@ import java.util.Map;
 //import java.math.*;
 /**
  * Created by user on 3/18/2017.
+ * A class to represent a location, it has a lng/lat, a description and an associated image.
+ * Importantly it is able to calcualte how far away it is from other Locations.
  */
 
 public class Location {
@@ -15,6 +17,7 @@ public class Location {
     private int mImageResourceId;
 
     public Location(Double lat, Double lng, String descr, int img){
+        // A hashmap is a good representation that needs little manipulation to go into firebase.
         mCurrentLocation = new HashMap<String,Double>();
         mCurrentLocation.put("lat", lat);
         mCurrentLocation.put("lng", lng);
@@ -37,7 +40,7 @@ public class Location {
     // get distance to/from another location.
     // Takes a locatio object returns distance
     // calculation based on GCDF. (haversign Formula)
-    // formula taken from www.moveable-type.co.uk/scripts/latlong.html
+    // formula taken from http://movable-type.co.uk/scripts/latlong.html
     public Double getDistance(Location to){
 
         Double lat1 = mCurrentLocation.get("lat") * (Math.PI / 180);
@@ -51,7 +54,7 @@ public class Location {
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return c * 6371 * 1000;
 
-        // Possible implementation of vicenty formula.
+        // Possible implementation of vicenty formula. Currently not working.
         //return (2 * Math.asin()) * 6378.137  / 1000;
         //return (6378.137 * Math.atan2(Math.sqrt(Math.pow(Math.cos(lat2) * Math.sin(lng2 - lng1),2) + Math.pow(Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1),2)) / (Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2)* Math.cos(lng2 - lng1)),0))/1000;
     }

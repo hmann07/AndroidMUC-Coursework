@@ -2,6 +2,8 @@ package com.coursework.coursework3;
 
 import org.junit.Test;
 
+import java.text.DecimalFormat;
+
 import static org.junit.Assert.*;
 
 /**
@@ -9,11 +11,21 @@ import static org.junit.Assert.*;
  */
 public class LocationTest {
     @Test
-    public void getDistance() throws Exception {
+    public void getZeroDistance() throws Exception {
         Location t = new Location(0.0, 0.0, "point 1", 1);
         Location f = new Location(0.0, 0.0, "point 2", 2);
         double d = f.getDistance(t);
         assertEquals(0.0, d, d - 0.0);
+    }
+
+
+    public void getNonZeroDistance() throws Exception {
+        Location t = new Location(51.5264420, -0.1334590, "point 1", 1);
+        Location f = new Location(51.5272230, -0.1310450, "point 2", 2);
+        double d = f.getDistance(t);
+        DecimalFormat df = new DecimalFormat("#.####");
+
+        assertEquals("188.73", df.format(d));
     }
 
 }
