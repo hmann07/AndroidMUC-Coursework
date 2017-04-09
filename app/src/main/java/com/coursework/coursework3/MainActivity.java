@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     // List of points of interest.
     private Location[] mPOI = {
-            new Location(51.522026, -0.130534, "Computer Thing",R.drawable.comp),
-            new Location(51.522076, -0.130564, "Window", R.drawable.window),
-            new Location(51.522100, -0.130464, "Entrance to room", R.drawable.door)
+            new Location(51.522026, -0.130534, "Computer Thing",R.drawable.comp, 0.0f),
+            new Location(51.522076, -0.130564, "Window", R.drawable.window, 0.0f),
+            new Location(51.522100, -0.130464, "Entrance to room", R.drawable.door, 0.0f)
     };
 
     // list for keeping record of what is currently neary user location
@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Code taken from http://docs.indooratlas.com/android/dev-guide/getting-user-location.html. Start with getting access to sensors etc.
+
+        // Example code taken from http://docs.indooratlas.com/android/dev-guide/getting-user-location.html. Start with getting access to sensors etc.
         String[] neededPermissions = {
                 Manifest.permission.CHANGE_WIFI_STATE,
                 Manifest.permission.ACCESS_WIFI_STATE,
@@ -79,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        // find and add text to the MapinfoFragment
         mTextView = (TextView) findViewById(R.id.location_output);
-        mTextView.setText(R.string.test);
+        mTextView.setText(R.string.searching);
 
         // First create a location manager.
         mLocationManager = IALocationManager.create(this);
@@ -109,18 +111,19 @@ public class MainActivity extends AppCompatActivity {
         // 1 second update intervals
         mLocationRequest.setFastestInterval(1000);
 
-
+        // the listener will check for location each second. It should then update firebase and check if there's a point of interest nearby.
+        // if there is display the location to the use in the form of a list.
         mLocationListener = new IALocationListener() {
             @Override
             public void onLocationChanged(IALocation iaLocation) {
                 // We have a new location.
-                mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude(), "Your Location", R.mipmap.ic_launcher);
+                mLocation = new Location(iaLocation.getLatitude(), iaLocation.getLongitude(), "Your Location", R.mipmap.ic_launcher, iaLocation.getAccuracy());
 
                 Log.d(TAG, "latitude " + iaLocation.getLatitude());
                 Log.d(TAG, "latitude " + iaLocation.getLongitude());
 
                 // print out locations information
-                mTextView.setText("lat: " + mLocation.getCurrentLocation().get("lat") + ", lng: " + mLocation.getCurrentLocation().get("lng") );
+                mTextView.setText(mLocation.getLocDescription() );
 
 
                 // at this point we should log the local in firebase. Use current time as key.
@@ -130,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // and now update the map
 
-                updateMap(iaLocation.getLatitude(), iaLocation.getLongitude());
+                updateMap(mLocation);
 
                 // Check if there's anything intersting nearby. if the is, show in MapInfoFragment.
                 adapter.clear();
@@ -139,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                      ) {
 
                     if (l.getDistance(mLocation) < 3){
-                        // its point of interest. This will automatically update the  MapInfoFragment.
+                        // its point of interest. This will automatically update the  MapInfoFragment to tell the user.
                         adapter.add(l);
                     }
                 }
@@ -168,19 +171,20 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void updateMap(final Double lat, final Double lng){
+    public void updateMap(final Location loc){
         // get the map inside the fragement.
         mMap.getMapAsync(new OnMapReadyCallback() {
 
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 GoogleMap m = googleMap;
-                LatLng pos = new LatLng(lat, lng);
-
+                LatLng pos = new LatLng(loc.getCurrentLocation().get("lat"), loc.getCurrentLocation().get("lng"));
+                // clear any exisitng markers etc.
                 m.clear();
 
-                m.addCircle(new CircleOptions().center(pos).radius(2.2).fillColor(Color.argb(30,0,0,255)).strokeWidth(1).strokeColor(Color.GRAY));
-                m.addMarker(new MarkerOptions().position(pos).title("lat: " + lat + ", lng: " + lng));
+                // add a circle with radius based on accuracy measure from indoor atlas.
+                m.addCircle(new CircleOptions().center(pos).radius(loc.getAccuracy()).fillColor(Color.argb(30,0,0,255)).strokeWidth(1).strokeColor(Color.GRAY));
+                m.addMarker(new MarkerOptions().position(pos).title(loc.getLocDescription()));
 
                 m.moveCamera(CameraUpdateFactory.newLatLngZoom(pos,20));
 

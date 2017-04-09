@@ -6,8 +6,6 @@ import android.test.mock.MockContext;
 import org.junit.Test;
 
 import java.util.ArrayList;
-
-import static com.coursework.coursework3.R.string.test;
 import static org.junit.Assert.*;
 
 /**
@@ -20,8 +18,19 @@ public class POIAdapterTest {
         Context c = new MockContext();
         ArrayList mNearby = new ArrayList<Location>();
         POIAdapter mAdapter = new POIAdapter(c, mNearby);
-        Location t = new Location(51.5264420, -0.1334590, "point 1", 1);
+        Location t = new Location(51.5264420, -0.1334590, "point 1", 1, 0.0f);
         mAdapter.add(t);
         assertEquals(1,mAdapter.getCount(),1-mAdapter.getCount());
+    }
+    @Test
+
+    public void clearArray() throws Exception {
+        Context c = new MockContext();
+        ArrayList mNearby = new ArrayList<Location>();
+        POIAdapter mAdapter = new POIAdapter(c, mNearby);
+        Location t = new Location(51.5264420, -0.1334590, "point 1", 1, 0.0f);
+        mAdapter.add(t);
+        mAdapter.clear();
+        assertEquals(0,mAdapter.getCount(),0-mAdapter.getCount());
     }
 }

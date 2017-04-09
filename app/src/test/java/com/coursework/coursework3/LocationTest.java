@@ -12,16 +12,16 @@ import static org.junit.Assert.*;
 public class LocationTest {
     @Test
     public void getZeroDistance() throws Exception {
-        Location t = new Location(0.0, 0.0, "point 1", 1);
-        Location f = new Location(0.0, 0.0, "point 2", 2);
+        Location t = new Location(0.0, 0.0, "point 1", 1, 0.0f);
+        Location f = new Location(0.0, 0.0, "point 2", 2, 0.0f);
         double d = f.getDistance(t);
         assertEquals(0.0, d, d - 0.0);
     }
 
     @Test
     public void getNonZeroDistance() throws Exception {
-        Location t = new Location(51.5264420, -0.1334590, "point 1", 1);
-        Location f = new Location(51.5272230, -0.1310450, "point 2", 2);
+        Location t = new Location(51.5264420, -0.1334590, "point 1", 1, 0.0f);
+        Location f = new Location(51.5272230, -0.1310450, "point 2", 2, 0.0f);
         double d = f.getDistance(t);
         DecimalFormat df = new DecimalFormat("#.##");
 

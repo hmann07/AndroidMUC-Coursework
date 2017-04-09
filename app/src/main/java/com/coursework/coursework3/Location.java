@@ -15,20 +15,23 @@ public class Location {
     private Map<String,Double> mCurrentLocation;
     private String mDescription;
     private int mImageResourceId;
+    private Float mAccuracy;
 
-    public Location(Double lat, Double lng, String descr, int img){
+    public Location(Double lat, Double lng, String descr, int img, Float acc){
         // A hashmap is a good representation that needs little manipulation to go into firebase.
         mCurrentLocation = new HashMap<String,Double>();
         mCurrentLocation.put("lat", lat);
         mCurrentLocation.put("lng", lng);
         mDescription = descr;
         mImageResourceId = img;
+        mAccuracy = acc;
+
     }
 
     public String getDescription() {
         return mDescription;
     }
-
+    public Float getAccuracy() {  return mAccuracy; }
     public int getImageResourceId() {
         return mImageResourceId;
     }
@@ -59,4 +62,7 @@ public class Location {
         //return (6378.137 * Math.atan2(Math.sqrt(Math.pow(Math.cos(lat2) * Math.sin(lng2 - lng1),2) + Math.pow(Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng2 - lng1),2)) / (Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2)* Math.cos(lng2 - lng1)),0))/1000;
     }
 
+    public String getLocDescription(){
+        return "lat: " + getCurrentLocation().get("lat") + ", lng: " + getCurrentLocation().get("lng");
+    }
 }
